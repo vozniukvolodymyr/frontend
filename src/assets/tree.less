@@ -1,0 +1,153 @@
+.tree-container {
+  display: inline-block;
+  padding: 0.5em;  
+}
+
+.tree {
+  // display: inline-block;
+  display: table;
+  text-align: center;
+
+  &:before, &:after {
+    content: '';
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}
+
+.tree-node,
+.tree-node-children {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  &:before, &:after {
+    transition: all .35s;
+  }
+}
+.tree-node-label {
+  position: relative;
+  display: inline-block;  
+
+  .tree-node-label-inner {  
+    text-align: center;    
+  }
+}
+.tree-node-btn {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1.5em;
+  height: 1.5em;
+  z-index: 1;
+  margin-left: -0.75em;
+  margin-top: 9px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0, 0, 0, .15);
+  cursor: pointer;
+  transition: all .35s ease;
+
+  &:hover {
+    background-color: #e7e8e9;
+    transform: scale(1.15);
+  }
+
+  &:before, &:after {
+    content: '';
+    position: absolute;
+  }
+
+  &:before {
+    top: 50%;
+    left: 4px;
+    right: 4px;
+    height: 0;
+    border-top: 1px solid #ccc;
+  }
+
+  &:after {
+    top: 4px;
+    left: 50%;
+    bottom: 4px;
+    width: 0;
+    border-left: 1px solid #ccc;
+  }
+
+  &.expanded:after {
+    border: none;
+  }
+}
+.tree-node {
+  padding-top: 20px;
+  display: table-cell;
+  text-align: center;
+  vertical-align: top;
+  padding-left: 5px;
+  padding-right: 5px;
+
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 19px;
+  }
+
+  &:after {
+    left: 50%;
+    border-left: 1px solid #ddd;
+  }
+
+  &:not(:first-child):before,
+  &:not(:last-child):after {
+    border-top: 1px solid #ddd;
+  }
+}
+.collapsable .tree-node.collapsed {
+  padding-bottom: 30px;
+
+  .tree-node-label:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 50%;
+    height: 20px;
+    border-right: 1px solid #ddd;
+  }
+}
+.tree > .tree-node {
+  padding-top: 0;
+
+  &:after {
+    border-left: 0;
+  }
+}
+.tree-node-children {
+  padding-top: 20px;
+  display: table;
+  width: 100%;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 20px;
+    border-left: 1px solid #ddd;
+  }
+
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
