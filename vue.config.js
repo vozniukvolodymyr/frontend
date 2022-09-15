@@ -26,5 +26,10 @@ module.exports = {
       options[0][0].ignore.push('assets/avatars/**/*')
       return options;
     });
+  },
+  pluginOptions: {
+    webpackBundleAnalyzer: {
+      openAnalyzer: false
+    }
   }
 }
