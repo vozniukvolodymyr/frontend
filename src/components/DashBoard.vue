@@ -122,10 +122,7 @@
         <h1 class="title is-5 my-1">
           {{ locale.dashboard_profit_w }}
         </h1>
-        <chart-line
-          :chart-data="chartData"
-          :chart-options="chartOptions"
-        />
+        <chart-line :chart-data="chartData" :chart-options="chartOptions" />
       </div>
     </div>
   </div>
@@ -144,7 +141,9 @@ import {
   monthtostr,
 } from "@/_services/func.service";
 
-const ChartLineComponent = defineAsyncComponent(() => import('../helpers/ChartLine.vue'));
+const ChartLineComponent = defineAsyncComponent(
+  () => import("../helpers/ChartLine.vue")
+);
 export default defineComponent({
   name: "DashBoardComponent",
   components: {
@@ -230,7 +229,7 @@ export default defineComponent({
     };
   },
   methods: {
-    copyclick(): any {
+    copyclick() {
       navigator.clipboard
         .writeText(this.user.accounts[0].account)
         .then()
@@ -261,39 +260,25 @@ export default defineComponent({
     _innerclassrank() {
       return innerclassrank(store.getters.user.rank);
     },
-    elementprofile(i: any) {
-      let element = store.getters.profits[i];
-      let etr = document.createElement("tr");
-      this.userprofit?.appendChild(etr);
-      let etd = document.createElement("td");
-      etr.appendChild(etd);
-      etd.className = "enter-day m-1";
-      etd.textContent = element.year
-        .toString()
-        .concat(" ", monthtostr(element.month, this.locale));
-      etr = document.createElement("tr");
-      this.userprofit?.appendChild(etr);
-      etd = document.createElement("td");
-      etr.appendChild(etd);
-      etd.className = "enter-time m-1 pr-1";
-      const text = element.profit.toFixed(2);
+    fillprofit() {
       const coins = icon(
         findIconDefinition({ prefix: "fas", iconName: "coins" })
       );
-      etd.innerHTML = `
-                            <p class="is-align-items-center is-flex">
+      store.getters.profits.forEach((element: any) => {
+        let etr = document.createElement("tr");
+        this.userprofit?.appendChild(etr);
+        etr.innerHTML = `<td class="enter-day m-1">${element.year
+          .toString()
+          .concat(" ", monthtostr(element.month, this.locale))}</td>`;
+        etr = document.createElement("tr");
+        this.userprofit?.appendChild(etr);
+        etr.innerHTML = `<td class="enter-time m-1 pr-1"><p class="is-align-items-center is-flex">
                                   <span class="icon">
                                     ${coins.html}
                                   </span>
-                                  ${text}
-                            </p>`;
-    },
-    fillprofit() {
-      if (store.getters.profits.length > 0) {
-        for (let i = 0; i < store.getters.profits.length; i += 1) {
-          this.elementprofile(i);
-        }
-      }
+                                  ${element.profit.toFixed(2)}
+                            </p></td>`;
+      });
     },
     hrefmail() {
       return "mailto:" + this.companysemail;
@@ -304,13 +289,15 @@ export default defineComponent({
         this.loading = true;
         store
           .dispatch("getcompanyprofit")
-          .then((res: any) => {
+          .then((res) => {
             if (res.data) {
               this.chartData.labels = [...res.data.profits].map((item) => {
-                  const date = new Date(item.date);
-                  return monthtostr(date.getMonth(), this.locale).concat(" ", date.getFullYear().toString().slice(-2));
-                }
-              );
+                const date = new Date(item.date);
+                return monthtostr(date.getMonth(), this.locale).concat(
+                  " ",
+                  date.getFullYear().toString().slice(-2)
+                );
+              });
               this.chartData.datasets[0].data = [...res.data.profits].map(
                 (item) => item.profit
               );
@@ -327,6 +314,9 @@ export default defineComponent({
   mounted: function () {
     if (store.getters.enters.length > 0) {
       let day = store.getters.enters[0].day;
+      const lock = icon(
+        findIconDefinition({ prefix: "fas", iconName: "lock" })
+      );
       for (let i = 0; i < store.getters.enters.length; i += 1) {
         let element = store.getters.enters[i];
         let etr = document.createElement("tr");
@@ -348,9 +338,6 @@ export default defineComponent({
           .concat(element.day)
           .concat(` ${this.locale.ipaddress}: `)
           .concat(element.ip);
-        const lock = icon(
-          findIconDefinition({ prefix: "fas", iconName: "lock" })
-        );
         etd.innerHTML = `
                             <p class="is-align-items-center is-flex">
                                   <span class="icon">

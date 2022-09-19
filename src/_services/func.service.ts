@@ -1,17 +1,18 @@
-export const innerclassstatus = (status: any): string => {
+export const innerclassstatus = (status: number): string => {
+  const res = "has-text-weight-bold";
   switch (status) {
     case 1:
-      return "has-text-weight-bold has-text-white has-background-primary";
+      return res.concat(" has-text-white has-background-primary");
     case 2:
-      return "has-text-weight-bold has-text-white has-background-danger";
+      return res.concat(" has-text-white has-background-danger");
     case 3:
-      return "has-text-weight-bold has-text-black has-background-warning";
+      return res.concat(" has-text-black has-background-warning");
     default:
-      return "has-text-weight-bold has-text-black has-background-warning";
+      return res.concat(" has-text-black has-background-warning");
   }
 }
 
-export const classrank = (rank: any, locale: any): string => {
+export const classrank = (rank: number, locale: any): string => {
   switch (rank) {
     case 1:
       return locale.rank_silver;
@@ -20,13 +21,13 @@ export const classrank = (rank: any, locale: any): string => {
     case 3:
       return locale.rank_platinum;
     case 4:
-      return locale.rank_director;            
+      return locale.rank_director;
     default:
       return locale.rank_client;
-  }      
+  }
 }
 
-export const monthtostr = (month: any, locale: any): string => {
+export const monthtostr = (month: number, locale: any): string => {
   switch (month) {
     case 1:
       return locale.month_January;
@@ -35,7 +36,7 @@ export const monthtostr = (month: any, locale: any): string => {
     case 3:
       return locale.month_March;
     case 4:
-      return locale.month_April;            
+      return locale.month_April;
     case 5:
       return locale.month_May;
     case 6:
@@ -51,25 +52,43 @@ export const monthtostr = (month: any, locale: any): string => {
     case 11:
       return locale.month_November;
     case 12:
-      return locale.month_December;              
+      return locale.month_December;
     default:
       return '';
-  }      
+  }
 }
 
-export const innerclassrank= (rank: any): string => {
+export const innerclassrank = (rank: number): string => {
+  const res = "has-text-weight-bold";
   switch (rank) {
     case 1:
-      return "has-text-weight-bold has-text-black has-background-white-ter";
+      return res.concat(" has-text-weight-bold has-text-black has-background-white-ter");
     case 2:
-      return "has-text-weight-bold has-text-black has-background-warning";
+      return res.concat(" has-text-black has-background-warning");
     case 3:
-      return "has-text-weight-bold has-text-white has-background-grey";
+      return res.concat(" has-text-white has-background-grey");
     case 4:
-      return "has-text-weight-bold has-text-white color-back-menu ";          
+      return res.concat(" has-text-white color-back-menu");
     default:
-      return "has-text-weight-bold";
+      return res;
   }
+}
+
+export const objecthashmin = (data: any): number => {
+  let res = 0;
+  function calc(sum: number, str: string): number {
+    return [...str].reduce((s: number, ...args) => s + str.charCodeAt(args[1]), sum);
+  }
+  for (const key of Object.keys(data)) {
+    if (data[key]) {
+      if (data[key] instanceof Array) {
+        data[key].forEach((item: any) => res = calc(res, item.toString()));
+      } else {
+        res = calc(res, data[key].toString());
+      }
+    }
+  }
+  return res;
 }
 
 export const objecthash = (data: any): number => {
@@ -102,23 +121,23 @@ export const looksLikeMail = (str: any): any => {
     && (/^([a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)$/.test(str.trim()));
 }
 
-export const checkpassvalid = (value: string): any => {
-  if ((value === '') || (value.length < 6) || (value.length > 15)) {
+export const checkpassvalid = (value: string): boolean => {
+  if (!value || value.length < 6 || value.length > 15) {
     return false
   } else {
     return true;
   }
 }
 
-export const commentvalid = (value: string): any => {
-  if (value.length > 128) {
+export const commentvalid = (value: string): boolean => {
+  if (!value || value.length > 128) {
     return false
   } else {
     return true;
   }
 }
 
-export const amountvalid = (value: string): any => {
+export const amountvalid = (value: string): boolean => {
   const val = parseFloat(value);
   if (!Number.isNaN(val) && val > 0 && val <= 1000000) {
     return true
@@ -127,12 +146,16 @@ export const amountvalid = (value: string): any => {
   }
 }
 
-export const dateformat = (value: any): string => {
-  return value.getFullYear() +
-  "-" +
-  ("0" + (value.getMonth() + 1)).slice(-2) +
-  "-" +
-  ("0" + value.getDate()).slice(-2);
+export const dateformat = (value: Date): string => {
+  if (value instanceof  Date){
+    return value.getFullYear() +
+      "-" +
+      ("0" + (value.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + value.getDate()).slice(-2);
+  }else{
+    return '';
+  }
 }
 
 export const scrolltopshow = (style: any) => {
@@ -147,7 +170,7 @@ export const scrolltopshow = (style: any) => {
 }
 
 export const scrolltop = () => {
-  window.scroll({top: 0, behavior: "smooth"});
+  window.scroll({ top: 0, behavior: "smooth" });
   /*document.body.scrollTop = 0; // For Safari
   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera*/
 }
