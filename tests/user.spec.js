@@ -87,4 +87,28 @@ describe("Class User", () => {
         const user = new User();
         expect(user.allamount()).toEqual("0.00");
     })
+    test("will check function 'printamount' : result '5000.00'", () => {
+        const user = new User();
+        expect(user.printamount({account: 410000000215, amount: 5000, free: 0})).toEqual("5000.00");
+    })
+    test("will check function 'printamountfree' : result '123.10'", () => {
+        const user = new User();
+        expect(user.printamountfree({account: 410000000215, amount: 5000, free: 123.10})).toEqual("123.10");
+    })
+    test("will check function 'printsubacount' : result '410000000215'", () => {
+        const user = new User();
+        expect(user.printsubacount({account: 410000000215, amount: 5000, free: 0})).toEqual("4100 0000 0215");
+    })
+    test("will check function 'printamount' : result '0.00'", () => {
+        const user = new User();
+        expect(user.printamount(user.swift)).toEqual("0.00");
+    })
+    test("will check function 'printamountfree' : result '0.00'", () => {
+        const user = new User();
+        expect(user.printamountfree(user.swift)).toEqual("0.00");
+    })
+    test("will check function 'printsubacount' : result ''", () => {
+        const user = new User();
+        expect(user.printsubacount(user.swift)).toEqual("");
+    })
 })

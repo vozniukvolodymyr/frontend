@@ -53,8 +53,8 @@ export default class User {
     fullusername(): string {
         return this.lastname + ' ' + this.firstname;
     }
-    findaccount(account: any): accountT {
-        function find(element: any): any {
+    findaccount(account: number): accountT {
+        function find(element: accountT): accountT | undefined {
             if (element.account === account) {
                 return element;
             }
@@ -62,10 +62,10 @@ export default class User {
         if (this.swift && this.swift.account === account) {
             return this.swift;
         } else {
-            return this.accounts.find(find) as any;
+            return this.accounts.find(find) as accountT;
         }
     }
-    strToBool(s: string) {
+    strToBool(s: string): boolean {
         // will match one and only one of the string 'true','1', or 'on' rerardless
         // of capitalization and regardless off surrounding white-space.
         //
@@ -90,12 +90,12 @@ export default class User {
         this.assignautotransfer(data);
         this.assignaccount(data);
     }
-    assignaccount(data: any): void {
+    assignaccount<Type extends { swift: accountT, accounts: Array<accountT>, versionaccount: string }>(data: Type): void {
         this.swift = data.swift;
         this.accounts = data.accounts;
         this.versionaccount = data.versionaccount;
     }
-    assignautotransfer(data: any): void {
+    assignautotransfer<Type extends { autotransferprofit: any, autotransferbonus: any, versionuser: string }>(data: Type): void {
         if (typeof data.autotransferprofit == "string") {
             this.autotransferprofit = this.strToBool(data.autotransferprofit);
         } else {
@@ -109,29 +109,16 @@ export default class User {
         this.versionuser = data.versionuser;
     }
     allamount(): string {
-        /*let sum = 0;
-        if (this.swift) {
-            sum = this.swift.amount
-        }
-        this.accounts.forEach((item: any) => {
-            sum = sum + item.amount;
-        });
-        return sum.toFixed(2);*/
-        return this.accounts.length > 0 ? this.accounts.reduce((s, item: any) => (s + item.amount),
-               this.swift ? this.swift.amount : 0).toFixed(2) : "0.00";
+        return this.accounts.length > 0 ? this.accounts.reduce((s, item: accountT) => (s + item.amount),
+            this.swift ? this.swift.amount : 0).toFixed(2) : "0.00";
     }
-    printamount(account: any): string {
-        return account?.amount.toFixed(2);
+    printamount<Type extends { amount: number }>(a: Type): string {
+        return a ? a.amount.toFixed(2) : '0.00';
     }
-    printamountfree(account: any): string {
-        if (account?.free) {
-            return account?.free.toFixed(2);
-        } else {
-            return "0.00"
-        }
+    printamountfree<Type extends { free: number }>(a: Type): string {
+        return a ? a.free.toFixed(2) : '0.00';
     }
-    printsubacount(account: any): string {
-        const str = account?.account.toString();
-        return str?.split(/(?=(?:....)*$)/).join(' ');
+    printsubacount<Type extends { account: number }>(a: Type): string {
+        return a ? a.account.toString().split(/(?=(?:....)*$)/).join(' ') : "";
     }
 }
